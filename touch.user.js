@@ -2,7 +2,8 @@
 // @name           Twitch touches pokemon
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
-// @version        0.7
+// @author         MattiasBuelens
+// @version        1.0
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
@@ -211,7 +212,6 @@ var touch_pad = {
         touch_pad.aim();
 
         if(touch_pad.interval_handle){
-            console.log('Touchpad: found old handle, disabling.')
             clearInterval(touch_pad.interval_handle);
         }
         //update the size every 50 ms , thanks to Meiguro's idea!
