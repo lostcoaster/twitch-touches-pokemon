@@ -186,10 +186,10 @@ var touch_pad = {
 
             // add the reaiming into settings menu. idea stolen from the chat-filter : http://redd.it/1y8ukl
             $('.chat-settings')
-                .append($('<div class="chat-menu-header">Touch pad config</div>'))
-                .append($('<div class="chat-menu-content"><label><input id="ttp-show-border" type="checkbox">Show border</label></div>'))
-                .append($('<div class="chat-menu-content"><label><input id="ttp-direct-send" type="checkbox">Send on clicking</label></div>'))
+                .append('<div class="chat-menu-header">Touch pad</div>')
                 .append($('<div class="chat-menu-content"></div>')
+                    .append('<p><label><input id="ttp-show-border" type="checkbox"> Show border</label></p>')
+                    .append('<p><label><input id="ttp-direct-send" type="checkbox"> Send on clicking</label></p>')
                     .append($('<button>Reposition Touchpad</button>').click(function () {
                         touch_pad.aim();
                     })));
