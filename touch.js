@@ -4,6 +4,7 @@
 // @author     lostcoaster
 // @version    0.5
 // @description  A tool adding a touch overlay onto the stream of twitchplayspokemon.
+// @grant      unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include    /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
