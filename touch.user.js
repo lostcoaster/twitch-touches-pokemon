@@ -2,7 +2,7 @@
 // @name           Twitch touches pokemon
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
-// @version        0.6
+// @version        0.7
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
