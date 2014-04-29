@@ -8,10 +8,10 @@
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include    /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
 
-// @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js
+// @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
 
-// for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js';})();
+// for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js';})();
 
 (function () {
 "use strict";
