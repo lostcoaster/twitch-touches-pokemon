@@ -11,7 +11,7 @@
 // @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js
 // ==/UserScript==
 
-// for bookmarklet users : javascript:(function(){to.be.finished.})()
+// for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js';})();
 
 
 
