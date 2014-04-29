@@ -8,12 +8,28 @@
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include    /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
 
-// @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js
+// @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
 
-// for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.js';})();
+// for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js';})();
 
+(function () {
+"use strict";
 
+// ----------------------------
+// Greasemonkey support
+// ----------------------------
+// Greasemonkey userscripts run in a separate environment and cannot use global
+// variables from the page directly. They need to be accessed via `unsafeWindow`
+
+var myWindow;
+try {
+    myWindow = unsafeWindow;
+} catch(e) {
+    myWindow = window;
+}
+
+var $ = myWindow.jQuery;
 
 var touch_pad = {
     parameters: {
@@ -83,6 +99,7 @@ var touch_pad = {
 
                 });
 
+            // add the reaiming into settings menu. idea stolen from the chat-filter : http://redd.it/1y8ukl
             $('.chat-settings')
                 .append($('<div class="chat-menu-header">Touch pad config</div>'))
                 .append($('<div class="chat-menu-content"></div>')
@@ -113,6 +130,9 @@ var touch_pad = {
     }
 };
 
-// add the reaiming into settings menu. idea stolen from the chat-filter : http://redd.it/1y8ukl
+// initialize on DOM ready
+$(function () {
+    touch_pad.init();
+});
 
-touch_pad.init();
+})();
