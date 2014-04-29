@@ -17,7 +17,7 @@
 
 var touch_pad = {
     parameters: {
-        position_x: 0.358,
+        position_x: 0.359,
         position_y: 0.548,
         original_height: 434,
         bar_height: 30,
