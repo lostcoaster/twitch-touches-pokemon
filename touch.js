@@ -17,11 +17,13 @@
 
 var touch_pad = {
     parameters: {
-        position_x: 0.357,
-        position_y: 0.544,
+        position_x: 0.358,
+        position_y: 0.548,
         original_height: 434,
         bar_height: 30,
-        ratio: 9 / 16
+        ratio: 9 / 16,
+        screen_height: 192,
+        screen_width: 256
     },
 
     scale: 1,
@@ -30,9 +32,11 @@ var touch_pad = {
 
     // reflect mouse event to coordinate output.
     coords: function (event) {
-        return Math.floor((event.pageX - $(event.target).offset().left) / touch_pad.scale)
-            + ',' +
-            Math.floor((event.pageY - $(event.target).offset().top) / touch_pad.scale);
+        var x = Math.floor((event.pageX - $(event.target).offset().left) / touch_pad.scale);
+        var y = Math.floor((event.pageY - $(event.target).offset().top) / touch_pad.scale);
+        x = Math.min(Math.max(x, 1), touch_pad.parameters.screen_width);
+        y = Math.min(Math.max(y, 1), touch_pad.parameters.screen_height);
+        return x+','+y
     },
     // adjust position of the box, parameters are relative position of top-left corner of the box within stream screen
     // 0 <= rx,ry <= 1
@@ -51,7 +55,9 @@ var touch_pad = {
         $('.touch_overlay').offset({
             top: Math.floor(base_offset.top + ry * real_height),
             left: Math.floor(base_offset.left + left_margin + rx * real_width)
-        }).height(Math.floor(192 * touch_pad.scale)).width(Math.floor(256 * touch_pad.scale));
+        })
+            .height(Math.floor(touch_pad.parameters.screen_height * touch_pad.scale))
+            .width(Math.floor(touch_pad.parameters.screen_width * touch_pad.scale));
     },
 
     aim: function () {
@@ -63,7 +69,7 @@ var touch_pad = {
         if ($('.touch_overlay').length === 0) {
 
             $('#player').append('<div class="touch_overlay" style="cursor:crosshair;z-index:99"></div>');
-            $('body').append('<style type="text/css">.touchborder{border:red solid;}</style>');
+            $('body').append('<style type="text/css">.touchborder{border:red solid 1px;}</style>');
 
 
             $('.touch_overlay').unbind()
