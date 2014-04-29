@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name       Twitch touches pokemon
-// @namespace  https://github.com/lostcoaster/twitch-touches-pokemon
-// @author     lostcoaster
-// @version    0.6
-// @description  A tool adding a touch overlay onto the stream of twitchplayspokemon.
-// @grant      unsafeWindow
+// @name           Twitch touches pokemon
+// @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
+// @author         lostcoaster
+// @version        0.6
+// @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
+// @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
-// @include    /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
+// @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
 
-// @updateURL  https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
+// @updateURL      https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
 
 // for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js';})();
