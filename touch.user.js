@@ -15,6 +15,15 @@
 
 // for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js';})();
 
+/* jshint
+    lastsemic:true,
+    eqeqeq:true,
+    unused:true
+*/
+/* global
+    unsafeWindow:false
+*/
+
 (function () {
 'use strict';
 
@@ -67,7 +76,7 @@ Setting.prototype.fireObservers = function (value) {
     }
 };
 Setting.prototype.bind = function (input) {
-    var input = $(input);
+    input = $(input);
     if (input.is(':checkbox')) {
         this.bindCheckbox(input);
     }
@@ -84,6 +93,15 @@ Setting.prototype.bindCheckbox = function (checkbox) {
     checkbox.change(function () {
         self.setValue(checkbox.prop('checked'));
     });
+};
+
+
+var forIn = function (obj, f) {
+    for (var k in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            f(k, obj[k]);
+        }
+    }
 };
 
 var touch_pad = {
@@ -113,7 +131,7 @@ var touch_pad = {
         var y = Math.floor((event.pageY - $(event.target).offset().top) / touch_pad.scale);
         x = Math.min(Math.max(x, 1), touch_pad.parameters.screen_width);
         y = Math.min(Math.max(y, 1), touch_pad.parameters.screen_height);
-        return x+','+y
+        return x+','+y;
     },
     // adjust position of the box, parameters are relative position of top-left corner of the box within stream screen
     // 0 <= rx,ry <= 1
@@ -142,29 +160,29 @@ var touch_pad = {
     },
 
     init_settings: function () {
-        for (var k in touch_pad.settings) {
-            touch_pad.settings[k].observe(function () {
+        forIn(touch_pad.settings, function(k, setting){
+            setting.observe(function () {
                 touch_pad.save_settings();
             });
-        }
+        });
     },
     load_settings: function () {
         var settings = JSON.parse(myWindow.localStorage.getItem(touch_pad.settings_key));
-        for (var k in touch_pad.settings) {
-            touch_pad.settings[k].load(settings);
-        }
+        forIn(touch_pad.settings, function(k, setting){
+            setting.load(settings);
+        });
     },
     save_settings: function () {
         var settings = {};
-        for (var k in touch_pad.settings) {
-            touch_pad.settings[k].save(settings);
-        }
+        forIn(touch_pad.settings, function(k, setting){
+            setting.save(settings);
+        });
         myWindow.localStorage.setItem(touch_pad.settings_key, JSON.stringify(settings));
     },
     restore_default_settings: function () {
-        for (var k in touch_pad.settings) {
-            touch_pad.settings[k].restoreDefault();
-        }
+        forIn(touch_pad.settings, function(k, setting){
+            setting.restoreDefault();
+        });
     },
 
     init: function () {
