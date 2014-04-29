@@ -15,7 +15,7 @@
 // for bookmarklet users : javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js';})();
 
 (function () {
-"use strict";
+'use strict';
 
 // ----------------------------
 // Greasemonkey support
@@ -32,6 +32,59 @@ try {
 
 var $ = myWindow.jQuery;
 
+var Setting = function(key, defaultValue) {
+    this.key = key;
+    this.defaultValue = defaultValue;
+    this.value = undefined;
+    this.observers = [];
+};
+Setting.prototype.getValue = function () {
+    return (this.value !== undefined) ? this.value : this.defaultValue;
+};
+Setting.prototype.setValue = function (value) {
+    var newValue = (value !== undefined) ? value : this.defaultValue;
+    if (newValue !== this.value) {
+        this.value = newValue;
+        this.fireObservers(newValue);
+    }
+};
+Setting.prototype.restoreDefault = function () {
+    this.setValue(this.defaultValue);
+};
+Setting.prototype.load = function (settings) {
+    this.setValue(settings ? settings[this.key] : undefined);
+};
+Setting.prototype.save = function (settings) {
+    settings[this.key] = this.getValue();
+};
+Setting.prototype.observe = function (observer) {
+    this.observers.push(observer);
+};
+Setting.prototype.fireObservers = function (value) {
+    for (var i=0; i<this.observers.length; i++) {
+        this.observers[i].call(null, value, this.key, this);
+    }
+};
+Setting.prototype.bind = function (input) {
+    var input = $(input);
+    if (input.is(':checkbox')) {
+        this.bindCheckbox(input);
+    }
+};
+Setting.prototype.bindCheckbox = function (checkbox) {
+    var self = this;
+    // set current value
+    checkbox.prop('checked', this.getValue());
+    // bind checkbox to setting
+    this.observe(function (newValue) {
+        checkbox.prop('checked', newValue);
+    });
+    // bind setting to checkbox
+    checkbox.change(function () {
+        self.setValue(checkbox.prop('checked'));
+    });
+};
+
 var touch_pad = {
     parameters: {
         position_x: 0.359,
@@ -42,6 +95,12 @@ var touch_pad = {
         screen_height: 192,
         screen_width: 256
     },
+
+    settings: {
+        show_border : new Setting('show_border', true),
+        direct_send : new Setting('direct_send', false)
+    },
+    settings_key: 'twitch-touches-pokemon',
 
     scale: 1,
 
@@ -81,6 +140,31 @@ var touch_pad = {
         touch_pad.position(touch_pad.parameters.position_x, touch_pad.parameters.position_y); // rough estimation No.2
     },
 
+    init_settings: function () {
+        for (var k in touch_pad.settings) {
+            touch_pad.settings[k].observe(function () {
+                touch_pad.save_settings();
+            });
+        }
+    },
+    load_settings: function () {
+        var settings = JSON.parse(myWindow.localStorage.getItem(touch_pad.settings_key));
+        for (var k in touch_pad.settings) {
+            touch_pad.settings[k].load(settings);
+        }
+    },
+    save_settings: function () {
+        var settings = {};
+        for (var k in touch_pad.settings) {
+            touch_pad.settings[k].save(settings);
+        }
+        myWindow.localStorage.setItem(touch_pad.settings_key, JSON.stringify(settings));
+    },
+    restore_default_settings: function () {
+        for (var k in touch_pad.settings) {
+            touch_pad.settings[k].restoreDefault();
+        }
+    },
 
     init: function () {
         if ($('.touch_overlay').length === 0) {
@@ -94,7 +178,7 @@ var touch_pad = {
                     $('textarea')
                         .val(touch_pad.coords(event))
                         .change();  // Thanks Meiguro(/u/Meiguro), you made me realize I haven't triggered the change event!
-                    if ($('#enable-direct-send').is(':checked')) {
+                    if (touch_pad.settings.direct_send.getValue()) {
                         $('.send-chat-button button').click();
                     }
 
@@ -103,21 +187,25 @@ var touch_pad = {
             // add the reaiming into settings menu. idea stolen from the chat-filter : http://redd.it/1y8ukl
             $('.chat-settings')
                 .append($('<div class="chat-menu-header">Touch pad config</div>'))
-                .append($('<div class="chat-menu-content"></div>')
-                    .append($('<label>Show border</label>')
-                        .prepend($('<input type="checkbox" checked>')
-                            .change(function (event) {
-                                $('.touch_overlay').toggleClass("touchborder", $(event.target).is(':checked'))
-                            }).change())
-                    )
-                )
-                .append($('<div class="chat-menu-content"><label><input id="enable-direct-send" type="checkbox">Send on clicking</label></div>'))
+                .append($('<div class="chat-menu-content"><label><input id="ttp-show-border" type="checkbox">Show border</label></div>'))
+                .append($('<div class="chat-menu-content"><label><input id="ttp-direct-send" type="checkbox">Send on clicking</label></div>'))
                 .append($('<div class="chat-menu-content"></div>')
                     .append($('<button>Reposition Touchpad</button>').click(function () {
-                        touch_pad.aim()
+                        touch_pad.aim();
                     })));
-
         }
+
+        // initialize settings
+        touch_pad.init_settings();
+        // bind inputs to settings
+        touch_pad.settings.show_border.bind('#ttp-show-border');
+        touch_pad.settings.direct_send.bind('#ttp-direct-send');
+        // observe settings
+        touch_pad.settings.show_border.observe(function (shown) {
+            $('.touch_overlay').toggleClass("touchborder", shown);
+        });
+        // load settings
+        touch_pad.load_settings();
 
         //start running
         touch_pad.aim();
