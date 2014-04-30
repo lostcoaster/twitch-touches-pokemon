@@ -3,13 +3,13 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.2
+// @version        1.3
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon(\/?)$/
-// @include        /^https?://(www\.?)\tinytwit\.ch\/twitchplayspokemon.*$/
+// @include        /^https?://(www\.)?tinytwit\.ch\/twitchplayspokemon.*$/
 
 // @updateURL      https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
