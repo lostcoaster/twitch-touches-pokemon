@@ -3,12 +3,13 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.1
+// @version        1.2
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
-// @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
+// @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon(\/?)$/
+// @include        /^https?://(www\.?)\tinytwit\.ch\/twitchplayspokemon.*$/
 
 // @updateURL      https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
@@ -188,15 +189,23 @@ var touch_pad = {
     init: function () {
         if ($('.touch_overlay').length === 0) {
 
-            $('#player').append('<div class="touch_overlay" style="cursor:crosshair;z-index:99"></div>');
-            $('body').append('<style type="text/css">.touchborder{border:red solid 1px;}</style>');
+            $('body')
+            	.append('<div class="touch_overlay" style="cursor:crosshair;z-index:99"></div>')
+            	.append('<style type="text/css">.touchborder{border:red solid 1px;}</style>');
 
 
             $('.touch_overlay').unbind()
                 .mouseup(function (event) {
-                    $('textarea')
-                        .val(touch_pad.coords(event))
-                        .change();  // Thanks Meiguro(/u/Meiguro), you made me realize I haven't triggered the change event!
+                	var output_text = touch_pad.coords(event);
+                    var output_area = $('textarea')
+                        .val(output_text)
+                        .change();  
+                    
+                    // on tinytwitch accessing the textarea is difficult.
+                	if (output_area.length === 0)
+                		myWindow.prompt('Twitch touches pokemon cannot locate the chat box on this page, possibly because it is not on the offical stream page, but you can copy the following value to send it yourself.',
+                			output_text);
+                	
                     if (touch_pad.settings.direct_send.getValue()) {
                         $('.send-chat-button button').click();
                     }
