@@ -140,18 +140,19 @@
             var base = $('#player');
             if(!base.is('object')) // in tinytwitch #player is that object.
                 base = base.find('object'); // but in twitch player is just a div.
+            var height = base.height() - touch_pad.parameters.bar_height;
             var base_offset = base.offset();
             var real_height, real_width, left_margin, top_margin;
-            if (base.height() / base.width() > touch_pad.parameters.ratio) {
+            if (height / base.width() > touch_pad.parameters.ratio) {
                 // this is the behavior of BetterTTV, filling horizontally and leave margins on top and bottom
                 real_width = base.width();
                 real_height = real_width * touch_pad.parameters.ratio;
                 touch_pad.scale = real_height / touch_pad.parameters.original_height;
                 left_margin = 0;
-                top_margin = (base.height() - real_height) / 2;
+                top_margin = (height - real_height) / 2;
             } else {
                 // this is the normal behavior of twitch, filling vertically and leave margins on left and right.
-                real_height = base.height() - touch_pad.parameters.bar_height;
+                real_height = height;
                 touch_pad.scale = real_height / touch_pad.parameters.original_height;
                 real_width = real_height / touch_pad.parameters.ratio;
                 left_margin = (base.width() - real_width) / 2;
