@@ -3,7 +3,7 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.4
+// @version        1.5
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
@@ -138,33 +138,38 @@ var touch_pad = {
     // adjust position of the box, parameters are relative position of top-left corner of the box within stream screen
     // 0 <= rx,ry <= 1
     position: function (rx, ry) {
-        var base = $('#player');
-        if(!base.is('object')) // in tinytwitch #player is that object.
-            base = base.find('object'); // but in twitch player is just a div.
-        var height = base.height() - touch_pad.parameters.bar_height;
-        var base_offset = base.offset();
-        var real_height, real_width, left_margin, top_margin;
-        if (height / base.width() > touch_pad.parameters.ratio) {
-            // this is the behavior of BetterTTV, filling horizontally and leave margins on top and bottom
-            real_width = base.width();
-            real_height = real_width * touch_pad.parameters.ratio;
-            touch_pad.scale = real_height / touch_pad.parameters.original_height;
-            left_margin = 0;
-            top_margin = (height - real_height) / 2;
-        } else {
-            // this is the normal behavior of twitch, filling vertically and leave margins on left and right.
-            real_height = height;
-            touch_pad.scale = real_height / touch_pad.parameters.original_height;
-            real_width = real_height / touch_pad.parameters.ratio;
-            left_margin = (base.width() - real_width) / 2;
-            top_margin = 0;
+        try{
+            var base = $('#player');
+            if(!base.is('object')) // in tinytwitch #player is that object.
+                base = base.find('object'); // but in twitch player is just a div.
+            var height = base.height() - touch_pad.parameters.bar_height;
+            var base_offset = base.offset();
+            var real_height, real_width, left_margin, top_margin;
+            if (height / base.width() > touch_pad.parameters.ratio) {
+                // this is the behavior of BetterTTV, filling horizontally and leave margins on top and bottom
+                real_width = base.width();
+                real_height = real_width * touch_pad.parameters.ratio;
+                touch_pad.scale = real_height / touch_pad.parameters.original_height;
+                left_margin = 0;
+                top_margin = (height - real_height) / 2;
+            } else {
+                // this is the normal behavior of twitch, filling vertically and leave margins on left and right.
+                real_height = height;
+                touch_pad.scale = real_height / touch_pad.parameters.original_height;
+                real_width = real_height / touch_pad.parameters.ratio;
+                left_margin = (base.width() - real_width) / 2;
+                top_margin = 0;
+            }
+            $('.touch_overlay').offset({
+                top: Math.floor(base_offset.top + top_margin + ry * real_height),
+                left: Math.floor(base_offset.left + left_margin + rx * real_width)
+            })
+                .height(Math.floor(touch_pad.parameters.screen_height * touch_pad.scale))
+                .width(Math.floor(touch_pad.parameters.screen_width * touch_pad.scale));
+        } catch(err) {
+            console.error(err); //don't quit
         }
-        $('.touch_overlay').offset({
-            top: Math.floor(base_offset.top + top_margin + ry * real_height),
-            left: Math.floor(base_offset.left + left_margin + rx * real_width)
-        })
-            .height(Math.floor(touch_pad.parameters.screen_height * touch_pad.scale))
-            .width(Math.floor(touch_pad.parameters.screen_width * touch_pad.scale));
+
     },
 
     aim: function () {
