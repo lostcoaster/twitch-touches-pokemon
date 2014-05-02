@@ -137,13 +137,15 @@
         // adjust position of the box, parameters are relative position of top-left corner of the box within stream screen
         // 0 <= rx,ry <= 1
         position: function (rx, ry) {
-            var base = $('#player').find('object');
+            var base = $('#player');
+            if(!base.is('object')) // in tinytwitch #player is that object.
+                base = base.find('object'); // but in twitch player is just a div.
             var base_offset = base.offset();
             var real_height, real_width, left_margin, top_margin;
-            if (base.height() / base.width() > touch_pad.settings.ratio) {
+            if (base.height() / base.width() > touch_pad.parameters.ratio) {
                 // this is the behavior of BetterTTV, filling horizontally and leave margins on top and bottom
                 real_width = base.width();
-                real_height = real_width()*touch_pad.settings.ratio;
+                real_height = real_width()*touch_pad.parameters.ratio;
                 touch_pad.scale = real_height / touch_pad.parameters.original_height;
                 left_margin = 0;
                 top_margin = (base.height() - real_height) / 2;
