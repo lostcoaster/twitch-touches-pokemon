@@ -145,7 +145,7 @@
             if (base.height() / base.width() > touch_pad.parameters.ratio) {
                 // this is the behavior of BetterTTV, filling horizontally and leave margins on top and bottom
                 real_width = base.width();
-                real_height = real_width()*touch_pad.parameters.ratio;
+                real_height = real_width * touch_pad.parameters.ratio;
                 touch_pad.scale = real_height / touch_pad.parameters.original_height;
                 left_margin = 0;
                 top_margin = (base.height() - real_height) / 2;
