@@ -3,13 +3,14 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.5
+// @version        1.6
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon(\/?)$/
 // @include        /^https?://(www\.)?tinytwit\.ch\/twitchplayspokemon.*$/
+// @include        /^https?://(www\.)?twitchplayspokemon.net$/
 
 // @updateURL      https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
@@ -139,7 +140,7 @@ var touch_pad = {
     // 0 <= rx,ry <= 1
     position: function (rx, ry) {
         try{
-            var base = $('#player');
+            var base = $('#player,#videoPlayer');
             if(!base.is('object')) // in tinytwitch #player is that object.
                 base = base.find('object'); // but in twitch player is just a div.
             var height = base.height() - touch_pad.parameters.bar_height;
