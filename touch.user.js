@@ -10,7 +10,7 @@
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon(\/?)$/
 // @include        /^https?://(www\.)?tinytwit\.ch\/twitchplayspokemon.*$/
-// @include        /^https?://(www\.)?twitchplayspokemon.net$/
+// @include        /^https?://(www\.)?twitchplayspokemon\.net\/?$/
 
 // @updateURL      https://raw.githubusercontent.com/lostcoaster/twitch-touches-pokemon/master/touch.user.js
 // ==/UserScript==
