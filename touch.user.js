@@ -3,12 +3,12 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.6
+// @version        1.7
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
-// @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon(\/?)$/
+// @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
 // @include        /^https?://(www\.)?tinytwit\.ch\/twitchplayspokemon.*$/
 // @include        /^https?://(www\.)?twitchplayspokemon\.net\/?$/
 
@@ -203,8 +203,36 @@ var touch_pad = {
         });
     },
 
+    put_chat: function(text){
+        var ret = $('textarea')
+            .val(text)
+            .change().length;
+
+        if (touch_pad.settings.direct_send.getValue()) {
+            $('.send-chat-button button').click();
+        }
+
+        return ret>0;
+    },
+
     init: function () {
         if ($('.touch_overlay').length === 0) {
+
+            if(location.href == "http://www.twitch.tv/twitchplayspokemon/chat"){
+                // the window
+                var callback = function(e){
+                    if(e.data && e.data.type === 'chat_coordinate')
+                        touch_pad.put_chat(e.data.content);
+                };
+
+                if(myWindow.attachEvent){
+                    // IE
+                    myWindow.attachEvent('onmessage', callback)
+                } else if (myWindow.addEventListener){
+                    // general browser
+                    myWindow.addEventListener('message', callback, false)
+                }
+            }
 
             $('body')
                 .append('<div class="touch_overlay" style="cursor:crosshair;z-index:99"></div>')
@@ -214,17 +242,18 @@ var touch_pad = {
             $('.touch_overlay').unbind()
                 .mouseup(function (event) {
                     var output_text = touch_pad.coords(event);
-                    var output_area = $('textarea')
-                        .val(output_text)
-                        .change();
 
                     // on tinytwitch accessing the textarea is difficult.
-                    if (output_area.length === 0)
-                        myWindow.prompt('Twitch touches pokemon cannot locate the chat box on this page, possibly because it is not on the offical stream page, but you can copy the following value to send it yourself.',
-                            output_text);
-
-                    if (touch_pad.settings.direct_send.getValue()) {
-                        $('.send-chat-button button').click();
+                    if (!touch_pad.put_chat(output_text)){
+                        var chat_frame = $('#chat_embed');
+                        if(chat_frame.length>0 && chat_frame[0].contentWindow.postMessage){
+                            //try using the postmessage in html5
+                            chat_frame[0].contentWindow
+                                .postMessage({type:'chat_coordinate', content:output_text}, 'http://www.twitch.tv');
+                        } else {
+                            myWindow.prompt('Twitch touches pokemon cannot locate the chat box on this page, possibly because it is not on the offical stream page, but you can copy the following value to send it yourself.',
+                                output_text);
+                        }
                     }
 
                 });
