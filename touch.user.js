@@ -7,7 +7,8 @@
 // @version        1.8a
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @description    Fixed to work with Pokemon Randomized Alpha Sapphire, Send on Clicking fixed, now works on Theater Mode
-// @grant          unsafeWindow
+// @grant          none
+// @run-at         document-end
 
 // this include string credits Twitch Plays Pokemon Chat Filter
 // @include        /^https?://(www|beta)\.twitch\.tv\/twitchplayspokemon.*$/
@@ -25,26 +26,37 @@
  unused:true
  */
 /* global
- unsafeWindow:false
+ window:false
+ require:false
  */
 
-(function () {
+(function (code) {
 
     'use strict';
 
-// ----------------------------
-// Greasemonkey support
-// ----------------------------
-// Greasemonkey userscripts run in a separate environment and cannot use global
-// variables from the page directly. They need to be accessed via `unsafeWindow`
+    // ----------------------------
+    // Greasemonkey support
+    // ----------------------------
+    // Greasemonkey userscripts run in a separate environment and cannot use global
+    // variables from the page directly. Because of this, we package all out code inside
+    // a script tag and have it run in the context of the main page.
 
-    var myWindow;
-    try {
-        myWindow = unsafeWindow;
-    } catch (e) {
-        myWindow = window;
-    }
+    // TODO: is there a way to get better error messages? It won't show any line numbers.
 
+    var s = document.createElement('script');
+    s.appendChild(document.createTextNode(
+       '(' + code.toString() + '());'
+    ));
+    document.body.appendChild(s);
+
+})(function () {
+
+    'use strict';
+
+    // Prevent loading on unrelated pages such as iframes
+    if (!window.$) { return; }
+
+    var myWindow = window;
     var $ = myWindow.jQuery;
 
     var Setting = function (key, defaultValue) {
@@ -294,9 +306,18 @@
         }
     };
 
-// initialize on DOM ready
-    $(function () {
+    if ($('.chat-settings').length) {
+        // Already initialized
         touch_pad.init();
-    });
+    } else {
+        // Initialize when chat view is inserted
+        var ChatView_proto = require("web-client/views/chat")["default"].prototype;
+        var original_didInsertElement = ChatView_proto.didInsertElement;
+        ChatView_proto.didInsertElement = function(){
+            original_didInsertElement && original_didInsertElement.apply(this, arguments);
+            touch_pad.init();
+        };
+    }
 
-})();
+
+});
