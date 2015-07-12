@@ -4,7 +4,7 @@
 // @author         lostcoaster
 // @author         MattiasBuelens
 // @author         WhatAboutGaming
-// @version        1.8a
+// @version        1.9
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
 // @description    Fixed to work with Pokemon Randomized Alpha Sapphire, Send on Clicking fixed, now works on Theater Mode
 // @grant          none
