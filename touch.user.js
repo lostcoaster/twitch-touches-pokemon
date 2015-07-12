@@ -53,6 +53,9 @@
 
     'use strict';
 
+    // Prevent loading on unrelated pages such as iframes
+    if (!window.$) { return; }
+
     var myWindow = window;
     var $ = myWindow.jQuery;
 
