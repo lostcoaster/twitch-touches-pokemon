@@ -3,8 +3,10 @@
 // @namespace      https://github.com/lostcoaster/twitch-touches-pokemon
 // @author         lostcoaster
 // @author         MattiasBuelens
-// @version        1.8
+// @author         WhatAboutGaming
+// @version        1.8a
 // @description    A tool adding a touch overlay onto the stream of twitchplayspokemon.
+// @description    Fixed to work with Pokemon Randomized Alpha Sapphire, Send on Clicking fixed, now works on Theater Mode
 // @grant          unsafeWindow
 
 // this include string credits Twitch Plays Pokemon Chat Filter
@@ -109,11 +111,11 @@
 
     var touch_pad = {
         parameters: {
-            position_x: 0.716,
-            position_y: 0.595,
-            original_height: 609,
+            position_x: 0.520,
+            position_y: 0.697,
+            original_height: 820,
             bar_height: 30,
-            ratio: 9 / 15,
+            ratio: 9 / 16,
             screen_height: 240,
             screen_width: 320
         },
@@ -209,7 +211,7 @@
                 .change().length;
 
             if (touch_pad.settings.direct_send.getValue()) {
-                $('.send-chat-button button').click();
+                $('.send-chat-button').click();
             }
 
             return ret>0;
