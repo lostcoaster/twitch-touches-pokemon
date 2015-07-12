@@ -27,6 +27,7 @@
  */
 /* global
  window:false
+ require:false
  */
 
 (function (code) {
@@ -302,9 +303,18 @@
         }
     };
 
-// initialize on DOM ready
-    $(function () {
+    if ($('.chat-settings').length) {
+        // Already initialized
         touch_pad.init();
-    });
+    } else {
+        // Initialize when chat view is inserted
+        var ChatView_proto = require("web-client/views/chat")["default"].prototype;
+        var original_didInsertElement = ChatView_proto.didInsertElement;
+        ChatView_proto.didInsertElement = function(){
+            original_didInsertElement && original_didInsertElement.apply(this, arguments);
+            touch_pad.init();
+        };
+    }
+
 
 });
