@@ -155,9 +155,15 @@
         position: function (rx, ry) {
             try{
                 var base = $('#player,#videoPlayer');
-                if(!base.is('object')) // in tinytwitch #player is that object.
+                var bar_height = touch_pad.parameters.bar_height;
+                if (!base.is('object')) { // in tinytwitch #player is that object.
+                    if (base.find('.player-controls-bottom').length) {
+                        // HTML5 player controls in overlay on top of Flash player
+                        bar_height = 0;
+                    }
                     base = base.find('object'); // but in twitch player is just a div.
-                var height = base.height() - touch_pad.parameters.bar_height;
+                }
+                var height = base.height() - bar_height;
                 var base_offset = base.offset();
                 var real_height, real_width, left_margin, top_margin;
                 if (height / base.width() > touch_pad.parameters.ratio) {
